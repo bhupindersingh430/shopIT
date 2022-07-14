@@ -3,18 +3,17 @@ import Errorhandler from "../utils/errorHandler.js";
 import catchAsyncErrors from "../middlewares/catchAsyncErrors.js";
 
 // create new product => /api/v1/admin/product/new
+exports.newProduct = catchAsyncErrors(async (req, res, next) => {
+  const product = await Product.create(req.body);
 
-exports.newProduct = catchAsyncErrors(async (req, res, next) => { 
-    const product = await Product.create(req.body);
-
-    res.status(201).json({
-      success: true,
-      product,
-    });
+  res.status(201).json({
+    success: true,
+    product,
   });
+});
 
 // get all products => /api/v1/products
-export async function getProducts(req, res, next) {
+exports.getProducts = catchAsyncErrors(async (req, res, next) => {
   const products = await Product.find();
 
   res.status(200).json({
@@ -22,10 +21,10 @@ export async function getProducts(req, res, next) {
     count: products.length,
     products,
   });
-}
+});
 
 // get single product detail => /api/v1/product/:id
-export async function getSingleProduct(req, res, next) {
+exports.getSingleProduct = catchAsyncErrors(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
   if (!product) {
     return next(new Errorhandler("Product not found", 404));
@@ -35,10 +34,10 @@ export async function getSingleProduct(req, res, next) {
     success: true,
     product,
   });
-}
+});
 
 //update product => /api/v1/admin/product/:id
-export async function updateProduct(req, res, next) {
+exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
   let product = await Product.findById(req.params.id);
 
   if (!product) {
@@ -57,10 +56,10 @@ export async function updateProduct(req, res, next) {
     success: true,
     product,
   });
-}
+});
 
 //delete product => /api/v1/admin/product/:id
-export async function deleteProduct(req, res, next) {
+exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
 
   if (!product) {
@@ -76,4 +75,4 @@ export async function deleteProduct(req, res, next) {
     success: true,
     message: "Product is deleted",
   });
-}
+});
